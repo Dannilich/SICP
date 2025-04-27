@@ -43,3 +43,10 @@
             (iter (halve x-halved) (double y-doubled) (+ sum y-doubled)))))
 
   (iter x y 0))
+
+;Cложность по времени:
+;T(n) <= 1*T(n/2) + 2 
+;Тогда Theta(2)=Theta(n^0), n^0 = n^(log2(1) = 0)
+
+;Согласно основной теоремы о рекурсивных отношениях(Master theorem):
+;T(n) = Theta(logn)  
