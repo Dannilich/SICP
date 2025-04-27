@@ -30,9 +30,23 @@
 ;f = 2*n
 ;g = 2^n
 
+;№1.12
+(define (binomial-coeficent n m)
+  (if (or (= n m) (= n 0) (= m 0))
+      1
+      (if (or (< n 0) (< m 0) (> m n))
+          0
+          (+ (binomial-coeficent (- n 1) m) (binomial-coeficent (- n 1) (- m 1))))))
+
+;№1.14
+;Нарисовал, но только не прикрепить)
+
 ;№1.15
 ;а) P вызовется 5 раз
 ;б) Время и память: О(logn) или точнее Тета([(lnx + ln10)/ ln3] с округлением вверх)
+
+;№1.16, 1.17, 1.18
+;см. Egyptian multiplication.rkt
 
 ;№1.31, 1.32, 1.33
 ;см. Building functional abstractions.rkt
