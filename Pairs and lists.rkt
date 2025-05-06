@@ -46,7 +46,16 @@
         (iter (cdr list-1) (cons (car list-1) list-2))))
   (iter list '() ))
 
+;№2.27
+;Реаизация глубогого первеворота списка
+(define (deep-reverse lst)
+  (if (null? lst)
+      '()
+      (if (pair? (car lst))
+          (snoc (deep-reverse (cdr lst)) (deep-reverse (car lst)) )
+           (snoc (deep-reverse (cdr lst)) (car lst) ) )))
 
+;No2.28
 ;Реализовать функцию получения листьев дерева
 (define (leafs tree)
   (if (null? tree)
@@ -54,3 +63,11 @@
       (if (pair? tree)
           (append (leafs (car tree)) (leafs (cdr tree)))
           (list tree))))
+
+;№2.31
+(define (tree-map f tree)
+  (if (null? tree)
+      '()
+      (if (pair? tree)
+          (cons (tree-map f (car tree))  (tree-map f (cdr tree)))
+          (f tree))))
