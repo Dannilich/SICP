@@ -37,9 +37,10 @@
           n)
     m))
 
-
+ 
 ;Правая и левая свертка
 
+;№2.38
 ;Реализация хвостовой рекурсией
 (define (reversed list)
   (define (iter list-1 list-2)
@@ -70,6 +71,7 @@
       (f (car list) (foldr-rec f x0 (cdr list)))))
 
 
+;№2.33
 ;Реализация через лев. и прав. свертки функций
 (define (length list)
   (foldr (lambda (x counter) (+ 1 counter))
@@ -86,7 +88,50 @@
          '()
          lst))
 
-(define (horners-scheme poly  x)
+
+;№2.39
+;Реализация переворота списка через fold правый и левый
+(define (reverse-foldl lst)
+  (foldl (lambda (accum x) (cons x accum))
+         '()
+         lst))
+
+;Через foldr никак не иначе через добавление в конец
+(define (snoc l a) 
+  (if (null? l)
+      (cons a '())
+      (cons (car l) (snoc (cdr l) a))))
+
+(define (reverse-foldr lst)
+  (foldr (lambda (x accum) (snoc accum x))
+         '()
+         lst))
+
+
+;№2.34
+;Реализация вычисления многочлена в точке через схему Горнера
+(define (horners-scheme poly x)
+  (foldl (lambda (accum coef) (+ (* accum x) coef))
+         0
+         poly))
+
+;Проба другим способом
+(define (anouther-poly-eval poly  x)
   (car (foldl (lambda (accum coef) (cons (+ (car accum)  (* coef (expt x (cdr accum)))) (- (cdr accum) 1)))
          (cons 0 (- (length poly) 1))
          poly)))
+
+
+;№2.35
+;Подсчёт листьев дерева
+(define (leafs tree)
+  (if (null? tree)
+      '()
+      (if (pair? tree)
+          (append (leafs (car tree)) (leafs (cdr tree)))
+          (list tree))))
+
+(define (leafs-count tree)
+  (foldr (lambda (x accum) (+ (length x) accum))
+         0
+         (map leafs tree)))
