@@ -1,4 +1,4 @@
-;Задания по парам и спискам
+ ;Задания по парам и спискам
 #lang racket
 
 
@@ -71,3 +71,12 @@
       (if (pair? tree)
           (cons (tree-map f (car tree))  (tree-map f (cdr tree)))
           (f tree))))
+
+;№2.32
+(define (subsets s)
+  (if (null? s)
+      (list '())
+      (let ([rest (subsets (cdr s))])
+        (append rest (map (lambda (x) (append (cons (car s) x))) rest)))))
+;Идет последовательное накопление подмножеств, начиная с пустого множества.
+;Расширяется добавлением нового элемента к каждому из накопленных подмножеств, в том числе пустому.
