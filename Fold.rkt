@@ -70,6 +70,10 @@
       x0
       (f (car list) (foldr-rec f x0 (cdr list)))))
 
+;Лев и прав свертка равны, при условиях ассоциативности и коммутативности операции (на общем типе вспомогательного списка и начального значения)
+;Пусть А - оперируемый общ. тип,  f - преобразование, е - нейтральный элемент
+;Тогда, если (A, f, e) - моноид, то прав и лев свертка дёт одинаковый результат
+
 
 ;№2.33
 ;Реализация через лев. и прав. свертки функций
@@ -78,7 +82,7 @@
          0
          list))
 
-(define (map f lst)
+(define (my-map f lst)
   (foldr (lambda (x accum) (append (list (f x)) accum))
          '()
          lst))
@@ -135,3 +139,51 @@
   (foldr (lambda (x accum) (+ (length x) accum))
          0
          (map leafs tree)))
+
+
+;№2.36
+;Реализовать foldr-n (foldr на список из списков длины n)
+(define (zip lst1 lst2)
+  (define (iter l1 l2 pairs)
+    (if (or (null? l1) (null? l2))
+        pairs
+        (iter (cdr l1) (cdr l2) (snoc pairs (list (car l1) (car l2))))))
+  (iter lst1 lst2 '() ))
+
+;(define (foldr-n f init lists)
+;  (foldr (lambda (x accum)
+;                         (map (lambda (lst) (foldr f init lst))
+;                         (zip x accum)))
+;          (apply-n (lambda (x) (cons init x))
+;                        '()
+;                        (length (car lists)))
+;          lists))
+
+(define (foldr-n op init seqs)
+  (if (null? (car seqs))
+      '()
+      (cons (foldr op init (map car seqs))
+                (foldr-n op init (map cdr seqs)))))
+
+;No2.37
+;Реализовать транспонирование матрицы и произведения матриц, векторов
+(define (transpose m)
+  (if (null? (car m))
+      '()
+      (let* [col (map car m)]
+             [row (car m)]
+        (map (lambda (x y) () row col)))))
+  )
+
+(define (sum lst)
+  (foldr + 0 lst))
+
+(define (dot-product v u)
+  (sum (map * v u)))
+
+(define (matrix-*-vector m v)
+  (map (lambda (lst) (sum (map * lst v))) m))
+
+(define (matrix-*-matrix m1 m2)
+  (map (lambda (col2) (matrix-*-vector  m1 col2)) m2))
+; (transpose '( (1 2) (3 4) (5 6)))
