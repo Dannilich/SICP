@@ -168,11 +168,9 @@
 ;No2.37
 ;Реализовать транспонирование матрицы и произведения матриц, векторов
 (define (transpose m)
-  (if (null? (car m))
+  (if (null?  (car m))
       '()
-      (let* [col (map car m)]
-             [row (car m)]
-        (map (lambda (x y) () row col)))))
+      (cons (map car m) (transpose (map cdr m))))
   )
 
 (define (sum lst)
@@ -182,8 +180,8 @@
   (sum (map * v u)))
 
 (define (matrix-*-vector m v)
-  (map (lambda (lst) (sum (map * lst v))) m))
+  (map (lambda (row) (sum (map * row v)))  m))
 
 (define (matrix-*-matrix m1 m2)
-  (map (lambda (col2) (matrix-*-vector  m1 col2)) m2))
-; (transpose '( (1 2) (3 4) (5 6)))
+  (transpose (map (lambda (col2) (matrix-*-vector  m1 col2)) (transpose m2))))
+; (transpose '( (1 2) (3 4) (5 6))) (matrix-*-matrix '((1 2)  (3 4)) '((3 2) (4 1)))
