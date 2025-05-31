@@ -1,5 +1,9 @@
-;Задачки по теме "Побочный эффект и присваивание"
+;Решение задач по теме "Побочный эффект и присваивание"
 #lang racket
+(require r5rs)
+(print-as-expression #f)
+(print-mpair-curly-braces #f)
+
 
 ;№3.1
 (define (make-accumulator value)
@@ -55,3 +59,32 @@
            (error "Неправильный пароль!"))
     )
   )
+
+
+;Реализовать версии с побочным эф.
+(define (snoc! lst x)
+  (if (null? (cdr lst))
+      (set-cdr! lst (cons x '()))
+      (snoc! (cdr lst) x))
+  )
+(define a (list 1 2 3 2))
+(define b (list 4 5))
+
+(define (append! list1 list2)
+  (if (null? (cdr list1))
+      (cond [(not(null? list2)) (set-cdr! list1 (cons (car list2) '())) (append! (cdr list1) (cdr list2)) ])
+      (append! (cdr list1) list2))
+  )
+
+(define (delete! lst x)
+  (cond [(null? lst) (error "В списке нет значения!")]
+             [(equal? (car lst) x)
+                            (begin
+                              (cond [(null? (cdr lst)) (set-car! lst '())]
+                                                    [(null? (cddr lst)) (begin (set-car! lst (cadr lst)) (set-cdr! lst '()))]
+                                                    [(not (null? (cddr lst))) (begin (set-car! lst (cadr lst)) (set-cdr! lst (cddr lst)))])
+                                    (set! x '())) 
+               ]
+            ; [(equal? (car(cdr lst)) x) (begin (set-cdr! lst (cddr lst)) (set! x '()))]
+             [else (delete! (cdr lst) x)])
+ )
