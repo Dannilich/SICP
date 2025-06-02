@@ -14,10 +14,9 @@
 (define (make-monitored f)
   (define calls-count 0)
   (lambda (args)
-    (if (equal? args "how-many-calls?")
-        calls-count
-        (begin (set! calls-count (+ 1 calls-count))
-               (f args)))))
+    (cond [ (equal? args 'how-many-calls?) calls-count ]
+               [(equal? args 'reset-count) (set! calls-count 0) 0]
+               [else (set! calls-count (+ 1 calls-count)) (f args)])))
 
 ;№3.3, 3.4, 3.7
 (define (make-account balance acc-password)
@@ -63,28 +62,41 @@
 
 ;Реализовать версии с побочным эф.
 (define (snoc! lst x)
-  (if (null? (cdr lst))
-      (set-cdr! lst (cons x '()))
-      (snoc! (cdr lst) x))
+  (cond [(null? lst) (error "Список не должен быть пустым")]
+             [(null? (cdr lst)) (set-cdr! lst (cons x '()))]
+             [else (snoc! (cdr lst) x)])
   )
+
+(define (append! list1 list2)
+  (when (not(null? list2))
+              (cond [(null? list1)  (error "1-ый cписок не должен быть пустым")]
+                         [(null? (cdr list1)) (set-cdr! list1 (cons (car list2) '())) (append! (cdr list1) (cdr list2)) ]
+                         [else (append! (cdr list1) list2)])
+       )  
+  )
+
+(define (reverse! l)
+  (define (loop i j)
+    (if (null? i)
+        j
+        (let ([k (cdr i)])
+          (set-cdr! i j)
+          (loop k i))))
+  (loop l null))
+
+(define (delete! x lst)
+  (cond [(or (null? lst) (null? (cdr lst))) (void)]
+             [(equal? (cadr lst) x) (set-cdr! lst (cddr lst)) ]
+             [else (display (cddr lst))(delete! (cdr lst) x)])
+ )
+#|
 (define a (list 1 2 3 2))
 (define b (list 4 5))
 
-(define (append! list1 list2)
-  (if (null? (cdr list1))
-      (cond [(not(null? list2)) (set-cdr! list1 (cons (car list2) '())) (append! (cdr list1) (cdr list2)) ])
-      (append! (cdr list1) list2))
-  )
-
-(define (delete! lst x)
-  (cond [(null? lst) (error "В списке нет значения!")]
-             [(equal? (car lst) x)
-                            (begin
-                              (cond [(null? (cdr lst)) (set-car! lst '())]
-                                                    [(null? (cddr lst)) (begin (set-car! lst (cadr lst)) (set-cdr! lst '()))]
-                                                    [(not (null? (cddr lst))) (begin (set-car! lst (cadr lst)) (set-cdr! lst (cddr lst)))])
-                                    (set! x '())) 
-               ]
-            ; [(equal? (car(cdr lst)) x) (begin (set-cdr! lst (cddr lst)) (set! x '()))]
-             [else (delete! (cdr lst) x)])
- )
+(delete! 5 b)
+b
+(delete! 2 a)
+a
+(delete! 2 a)
+a
+|#

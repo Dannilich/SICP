@@ -24,7 +24,13 @@
       (cons a '())
       (cons (car l) (snoc (cdr l) a))))
 
+;№2.17
+(define (last-pair l)
+  (if (null? (cdr l))
+      (car l)
+      (last-pair (cdr l))))
 
+;№2.18
 ;Написать функцию возвращающию переврнутый список
 ;Оценить по времени в кол-ве cons в зависиости от длины списка
 
@@ -64,7 +70,18 @@
           (append (leafs (car tree)) (leafs (cdr tree)))
           (list tree))))
 
+;№2.30
+;Возведение листьев дерева в квадрат
+(define (square x) (* x x))
+(define (square-tree tree)
+  (if (null? tree)
+      '()
+      (if (pair? tree)
+          (cons (square-tree (car tree))  (square-tree  (cdr tree)))
+          (square tree))))
+
 ;№2.31
+;Map на листья дерева
 (define (tree-map f tree)
   (if (null? tree)
       '()

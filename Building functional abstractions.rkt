@@ -4,6 +4,8 @@
 (define (id x) x)
 (define (add1 x) (+ x 1))
 (define (add2 x) (+ x 2))
+(define (is-even? x) ((zero? (remainder x 2))))
+
 
 ;Вычисление квадратного корня, через достаточную погрешность
 ;Как метод Герона Александрийского
@@ -57,11 +59,12 @@
 
 (define (pi-sum n)
   (* (sum
-       (lambda (x) (* (/ 1 (+ (* (- x 1) 2) 1))  ((if (= (remainder x 2) 0) - +) 1)))
+       (lambda (x) (* (/ 1 (+ (* (- x 1) 2) 1))  ((if (is-even? x) - +) 1)))
        1
        add1
        n)
      4))
+
 
 ;SCIP N1.31,
 ;Реализовать product итеративно и рекусривно
@@ -82,12 +85,12 @@
 (define (factorial n)
   (product-iter id 1 add1 n))
 
-(define (neared-odd x) (if (= (remainder x 2) 0) (+ 1 x) x))
+(define (neared-odd x) (if (zero? (remainder x 2)) (+ 1 x) x))
 
 (define (pi-product n)
   (* 4 
    (/ (* 2 (product-iter square 4.0 add2 n))
-      ((if (= (neared-odd n) n) / *)  (product-iter square 3.0 add2 n) (neared-odd n) ))))
+      ((if (is-even? n) * /)  (product-iter square 3.0 add2 n) (neared-odd n) ))))
 
 
 ;SCIP N1.32,
@@ -105,7 +108,6 @@
         (iter (next a) (combine (term a) result))))
   (iter a null-val))
 
-
 (define (product-iter term a next b)
   (accumulate-rec (lambda (x y) (* x y)) 1 term a next b))
 ;(define (sum term a next b)
@@ -113,10 +115,16 @@
 
 
 ;SCIP N1.33,
-;Реализовать filter
-(define (filter predicate combine null-val term a next b)
+;Реализовать filtred-accumulate
+(define (filtred-accumulate predicate combine null-val term a next b)
   (define (iter a result)
      (if (and (> a b) (predicate a))
          result
          (iter (next a) (combine (term a) result))))
    (iter a null-val))
+
+;(define (sum-of-square-of-prime-numbers a b)
+; (filtred-accumulate prime? (lambda (x y) (+ x y)) 0 square a add1 b))
+
+;(define (mul-of-prime-to-n n) ;prime-to-n? можно закоррировать
+; (filtred-accumulate prime-to-n? (lambda (x y) (* x y)) 1 id a add1 n))
